@@ -71,4 +71,6 @@ while (x > 0 && k <= 1000000000000L) {
 * **Time:** $O(V + E)$ 
 * **Space:** $O(V)$
 
+### 💻 java file 
+> **Link:** src/codeforces/selected/IdiotFirstSearch.java
 </details>
