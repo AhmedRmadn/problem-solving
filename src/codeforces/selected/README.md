@@ -75,55 +75,14 @@ while (x > 0 && k <= 1000000000000L) {
 > **Link:** src/codeforces/selected/IdiotFirstSearch.java
 </details>
 
-## 🧮 Math & Number Theory
 
-<details>
-<summary><b>1. Removal of a Sequence (Hard Version)</b> | <code>Div 2 D</code> | <code>10^12 Math Simulation</code></summary>
-
-> **Link:** [Insert Codeforces Link]
-> **Tags:** `math`, `implementation`, `harmonic lemma`
-
-### 💡 The "Aha!" Moment
-Don't simulate the array shrinking forward. Track the final index backward through time! Because $X = 10^{12}$, calculate exactly how many operations it takes for your division "speed" to increase, and teleport forward in $O(\sqrt{X})$ time.
-
-### 🪤 The Trap (What failed)
-A standard $O(X)$ `while` loop gets a Time Limit Exceeded (TLE) because $\lfloor (K-1)/(Y-1) \rfloor$ stays exactly the same for billions of operations.
-
-### 🛠️ The Strategy
-1. **Find Speed:** $Q = \lfloor (K - 1) / (Y - 1) \rfloor$. 
-2. **Find Room Left:** $R = (K - 1) \pmod{Y - 1}$. The room left before $Q$ increases is $(Y - 1) - 1 - R$.
-3. **Calculate Steps:** `steps = (room / Q) + 1`.
-4. **Teleport:** Add `(steps * Q)` to $K$, subtract `steps` from $X$.
-
-### ⏱️ Complexity
-* **Time:** $O(\sqrt{X})$ 
-* **Space:** $O(1)$
-
-### 💻 Core Logic Snippet
-```java
-long W = y - 1;
-while (x > 0 && k <= 1000000000000L) {
-    long Q = (k - 1) / W;
-    if (Q == 0) break; 
-    
-    long R = (k - 1) % W;           
-    long room = W - 1 - R;          
-    long steps = (room / Q) + 1;    
-    
-    steps = Math.min(steps, x);
-    k += steps * Q;
-    x -= steps;
-}
-```
-</details>
-
-## 🧮 Graph & Trees
+## 🧮 Greedy 
 
 <details>
 <summary><b>B1. Sub-RBS (Easy Version)</b> | <code>Codeforces Round 1073 (Div. 1)</code> | <code>Greedy / Bracket Balance</code></summary>
 
 > **Link:** [Codeforces Problem](https://codeforces.com/problemset/problem/2190/B1)
-> **Source Code:** [SubRBSEasyVersion.java](src/codeforces/selected/SubRBSEasyVersion.java)
+> **Source Code:** [SubRBSEasyVersion.java](https://github.com/AhmedRmadn/problem-solving/blob/master/src/codeforces/selected/SubRBSEasyVersion.java)
 > **Tags:** `combinatorics`, `constructive algorithms`, `greedy`, `strings`, `two pointers`
 
 ### 💡 The "Aha!" Moment
