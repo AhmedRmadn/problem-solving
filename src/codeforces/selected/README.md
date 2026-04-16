@@ -104,3 +104,34 @@ You can't just delete *any* `)` in a `)(` pair. If you delete a `)`, you break t
 * **Space:** $O(1)$ (Only storing a few primitive variables)
 
 </details>
+
+## 🧮 Two Pointers 
+
+<details>
+<summary><b>E. The Robotic Rush</b> | <code>Codeforces Round 1074 (Div. 4)</code> | <code>Two Pointers & Priority Queues</code></summary>
+
+> **Link:** [Codeforces Problem](https://codeforces.com/problemset/problem/2185/E)
+> **Source Code:** [TheRoboticRush.java](src/codeforces/selected/TheRoboticRush.java)
+> **Tags:** `binary search`, `greedy`, `implementation`, `two pointers`, `data structures`
+
+### 💡 The "Aha!" Moment
+Instead of simulating every robot's position step-by-step (which is too slow), we shift our perspective to the **global net displacement**. 
+Because all robots move together, we can calculate exactly how far a robot needs to travel left or right to hit its nearest spike. We put these "fatal distances" into two Min-Heaps (one for the left, one for the right). As the global offset shifts left and right, we just check the top of the heaps to see if the net displacement has crossed anyone's fatal threshold!
+
+### 🪤 The Trap (What failed)
+1. **Double Counting Deaths:** A robot could hit its left spike and die. Later, the instructions might swing the global offset far to the right, crossing that dead robot's right fatal threshold. If you aren't careful, the `rightQ` will "kill" it a second time, corrupting your `currentAlive` counter. You **must** use an `alive[]` boolean array.
+2. **Absolute vs. Net Distance:** `leftMove` and `rightMove` alone aren't enough. The distance to the left spike is consumed by the *net* shift left (`leftMove - rightMove`). 
+
+### 🛠️ The Strategy
+1. **Sort & Two Pointers:** Sort the robots ($A$) and the spikes ($B$). For each robot, use a pointer to find the closest spike to its left and the closest spike to its right. Store these distances in `leftSpike[]` and `rightSpike[]`.
+2. **Build the Heaps:** Push all robot indices into `leftQ` (ordered by `leftSpike` distance) and `rightQ` (ordered by `rightSpike` distance).
+3. **Simulate the Offset:** Read the instructions one by one, keeping a running total of `leftMove` and `rightMove`.
+4. **Purge the Dead:** - Check `leftQ`: While the top robot's `leftSpike` distance $\le$ `leftMove - rightMove`, pop it. If it is still `alive`, mark it dead and decrease `currentAlive`.
+   - Check `rightQ`: While the top robot's `rightSpike` distance $\le$ `rightMove - leftMove`, pop it. If it is still `alive`, mark it dead and decrease `currentAlive`.
+5. Print `currentAlive` after every step.
+
+### ⏱️ Complexity
+* **Time:** $O(N \log N + M \log M + K \log N)$ (Sorting the arrays takes $N \log N$ and $M \log M$. Polling from the PQs during the $K$ instructions takes at most $N \log N$ overall since each robot is popped at most twice).
+* **Space:** $O(N + M)$ (To store the distances, arrays, and queues).
+
+</details>
