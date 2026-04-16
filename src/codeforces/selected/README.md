@@ -75,6 +75,36 @@ while (x > 0 && k <= 1000000000000L) {
 > **Link:** src/codeforces/selected/IdiotFirstSearch.java
 </details>
 
+<details>
+<summary><b>D1. Tree Coloring (Easy Version)</b> | <code>Hello 2026</code> | <code>Tree BFS & Greedy Bounds</code></summary>
+
+> **Link:** [Codeforces Problem](https://codeforces.com/problemset/problem/2183/D1)
+> **Source Code:** [TreeColoringEasyVersion.java](src/codeforces/selected/TreeColoringEasyVersion.java)
+> **Tags:** `constructive algorithms`, `dfs and similar`, `greedy`, `trees`
+
+### 💡 The "Aha!" Moment
+When finding the minimum number of colors (operations) subject to strict constraints, look for the unavoidable bottlenecks.
+1. **The Level Constraint:** No two nodes at the same depth can share an operation. So, if the widest level has $W$ nodes, you mathematically *must* use at least $W$ operations.
+2. **The Edge Constraint:** No parent can share an operation with its child. Since all children of a node $U$ are on the exact same depth, no two children can share an operation either. This means a parent and **all** of its children must have mutually distinct colors! This requires $1 + \text{children}(U)$ operations.
+Because this is a tree, these two local minimums are actually sufficient. The global answer is just the maximum of these bottlenecks!
+
+### 🪤 The Trap (What failed)
+A common mistake when calculating the "parent + children" bottleneck is just taking the maximum degree of any node. For an internal node, its degree in an undirected tree is exactly its children + 1 (the parent). But for the **root** node, its degree is *only* its children. If you just take `max(degree)`, you will undercount the root by 1. You must manually add `+1` to the root's adjacency list size!
+
+### 🛠️ The Strategy
+1. Build the tree using an adjacency list.
+2. Run a standard Breadth-First Search (BFS) starting from the root (Node 0) to process the tree level by level.
+3. Track two things during the BFS:
+   * `currSize` (or `q.size()`): The width of the current level. Update the global `max` with this.
+   * The "family size" of the current node: `tree[u].size()`. If it's the root, treat it as `size + 1`. Update the global `max` with this.
+4. Return `max`.
+
+### ⏱️ Complexity
+* **Time:** $O(V + E)$ (A standard BFS completely traversing the tree)
+* **Space:** $O(V)$ (Storing the adjacency list, the `visited` array, and the BFS `Queue`)
+
+</details>
+
 
 ## 🧮 Greedy 
 
@@ -111,7 +141,7 @@ You can't just delete *any* `)` in a `)(` pair. If you delete a `)`, you break t
 <summary><b>E. The Robotic Rush</b> | <code>Codeforces Round 1074 (Div. 4)</code> | <code>Two Pointers & Priority Queues</code></summary>
 
 > **Link:** [Codeforces Problem](https://codeforces.com/problemset/problem/2185/E)
-> **Source Code:** [TheRoboticRush.java](src/codeforces/selected/TheRoboticRush.java)
+> **Source Code:** [TheRoboticRush.java](https://github.com/AhmedRmadn/problem-solving/blob/master/src/codeforces/selected/TheRoboticRush.java)
 > **Tags:** `binary search`, `greedy`, `implementation`, `two pointers`, `data structures`
 
 ### 💡 The "Aha!" Moment
