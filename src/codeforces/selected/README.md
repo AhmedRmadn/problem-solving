@@ -43,6 +43,38 @@ Since $x$ is still unvisited, no such divisor exists. Therefore, our hand is for
 </details>
 
 <details>
+<summary><b>C2. Renako Amaori and XOR Game (Hard)</b> | <code>Codeforces Round 1065</code> | <code>Game Theory & Bitmasks</code></summary>
+
+> **Link:** [Codeforces Problem](https://codeforces.com/problemset/problem/2171/C2)
+> **Source Code:** [RenakoAmaoriXORGameHardVersion.java](https://github.com/AhmedRmadn/problem-solving/blob/master/src/codeforces/selected/RenakoAmaoriXORGameHardVersion.java)
+> **Tags:** `bitmasks`, `games`, `greedy`
+
+### 💡 The "Aha!" Moment
+Let $A$ be Ajisai's final XOR score, and $B$ be Mai's. The global XOR sum $S = A \oplus B$ is completely immune to swaps! Because we are only swapping $a_i$ with $b_i$, the overall pool of numbers never changes, meaning $S$ is a constant invariant. 
+
+To win, a player must secure a `1` at the Most Significant Bit (MSB) where $A$ and $B$ differ. Conveniently, the bits where $A$ and $B$ differ are exactly the bits where $S$ has a `1`! Therefore, the game is entirely decided by the MSB of $S$. 
+
+**Who wins?** The player who controls the *last* possible opportunity to swap an element with a differing MSB. Because they have the final say, they can observe what the other player did and simply toggle the bit to guarantee they get the `1` and the opponent gets the `0`.
+
+### 🪤 The Trap (What failed)
+1. **0-Based vs 1-Based Indexing:** The problem states Ajisai moves on odd-numbered turns (1, 3, 5). If you store the arrays in standard 0-based Java arrays, Ajisai actually controls the **even** indices (0, 2, 4). You must check `last % 2 == 0` for Ajisai, not `% 2 == 1`!
+2. **Checking the Wrong MSB:** You cannot just look at the MSB of all numbers in the arrays. You strictly only care about the MSB of the **XOR sum $S$**, because any bit where $S = 0$ means $A$ and $B$ will end up tied at that bit regardless of what the players do. 
+
+### 🛠️ The Strategy
+1. Calculate the global XOR sum $S$ of all elements in both arrays $a$ and $b$.
+2. If $S == 0$, $A$ will always exactly equal $B$. Output `Tie`.
+3. Find the position of the Most Significant Bit (MSB) in $S$. (You can do this by right-shifting $S$ until it hits 0, tracking the max index).
+4. Scan the arrays **from right to left** (index $n-1$ down to 0).
+5. Find the *first* index from the right (the *last* turn chronologically) where the MSB of $a_i$ is different from the MSB of $b_i$. 
+6. If this `last` index is even (0-based), Ajisai controls the final decisive move. Output `Ajisai`. Otherwise, output `Mai`.
+
+### ⏱️ Complexity
+* **Time:** $O(N)$ (Three independent $O(N)$ passes: one to calculate $S$, one to find the MSB, and one reverse scan to find the last decisive index).
+* **Space:** $O(N)$ (To store arrays $a$ and $b$).
+
+</details>
+
+<details>
 <summary><b>1. Removal of a Sequence (Hard Version)</b> | <code>Div 2 D</code> | <code>10^12 Math Simulation</code></summary>
 
 > **Link:** [Insert Codeforces Link]
