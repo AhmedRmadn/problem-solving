@@ -364,6 +364,44 @@ The interleaved turns act like the Euclidean Algorithm for GCD. The sum of the m
 
 </details>
 
+<details>
+<summary><b>C. Dungeons</b> | <code>Codeforces Global Round 30 (Div. 1 + Div. 2)</code> | </summary>
+
+> **Link:** [Codeforces Problem](https://codeforces.com/problemset/problem/2164/C)
+> **Source Code:** [BattleOfArrays.java](https://github.com/AhmedRmadn/problem-solving/blob/master/src/codeforces/selected/Dungeon.java)
+> **Tags:** `binary search` , `brute force` , `data structures` , `greedy` , `sortings`
+
+### 💡 The "Aha!" Moment
+Monsters fall into two categories:
+1. **Renewable ($c_i > 0$):** Killing them gives you a sword back (potentially an even stronger one!). Your total ammo does not decrease.
+2. **Terminal ($c_i = 0$):** Killing them permanently destroys a sword.
+
+**The Greedy Order:** We should *always* fight Renewable monsters first. Since they don't consume our ammo count, fighting them can only maintain or upgrade our arsenal. Terminal monsters should be saved for the very end when we are ready to cash out our remaining swords for points. 
+Within each category, we should fight the weakest monsters first (sorted by $b_i$ ascending) to ensure our current swords are strong enough to kill them and trigger the upgrades.
+
+**The Weapon Choice:** When fighting a monster with health $b_i$, which sword should we use? We should use the **weakest possible sword that is still $\ge b_i$**. Wasting a massive sword on a weak monster might cost us a kill later.
+
+### 🪤 The Trap (What failed)
+**The "Max Sword" Trap:** If you just store your swords in a Max-Heap (Priority Queue) and always use your strongest sword, you will waste your heavy hitters on weak monsters. To efficiently find the *weakest valid sword*, you must use a Binary Search Tree structure. In Java, this is `TreeMap`, which gives us the magical $O(\log N)$ `ceilingKey()` function!
+
+### 🛠️ The Strategy
+1. **Store Swords:** Insert all initial swords into a `TreeMap<Long, Integer>` to track their frequencies. This allows us to find the optimal sword for any monster in $O(\log N)$ time.
+2. **Sort Monsters:** Push all monsters into a `PriorityQueue` using a custom comparator:
+   * Priority 1: Renewable ($c > 0$) comes before Terminal ($c = 0$).
+   * Priority 2: Sort by required damage ($b_i$) ascending.
+3. **Simulate the Battles:** Poll monsters one by one.
+   * Ask the TreeMap for the smallest sword $\ge b_i$ (`a.ceilingKey(monsterB)`).
+   * If no such sword exists, we can't kill this monster. Skip it.
+   * If found, remove the sword from the map and increment our kill count.
+   * If the monster was Renewable ($c > 0$), insert the new sword into the map with power $\max(\text{sword}, c_i)$.
+4. Print the total kill count.
+
+### ⏱️ Complexity
+* **Time:** $O(M \log M + M \log N)$ (Sorting the $M$ monsters in the Priority Queue takes $M \log M$. For each of the $M$ monsters, querying and updating the `TreeMap` of $N$ swords takes $O(\log N)$).
+* **Space:** $O(N + M)$ (To store the arrays, the Priority Queue, and the TreeMap).
+
+</details>
+
 ## 🧮 Two Pointers 
 
 <details>
