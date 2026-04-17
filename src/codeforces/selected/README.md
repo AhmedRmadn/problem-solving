@@ -402,6 +402,42 @@ Within each category, we should fight the weakest monsters first (sorted by $b_i
 
 </details>
 
+<details>
+<summary><b>C. Annoying Game</b> | <code>Codeforces Round 1067 (Div. 2)</code> | <code>Game Theory </code></summary>
+
+> **Link:** [Codeforces Problem](https://codeforces.com/problemset/problem/2158/C)
+> **Source Code:** [BattleOfArrays.java](https://github.com/AhmedRmadn/problem-solving/blob/master/src/codeforces/selected/AnnoyingGame.java)
+> **Tags:** `games`, `greedy`
+
+### 💡 The "Aha!" Moment & Game Analysis
+The problem states that $b_i \ge 0$. Because Alice wants to maximize the score, her optimal move is **always to Add** ($+b_i$). Bob wants to minimize the score, so his optimal move is **always to Subtract** ($-b_i$). 
+
+Because Bob plays right after Alice, his best strategy is to simply "mirror" Alice. Whatever index Alice chooses to boost, Bob will choose the exact same index and subtract, perfectly canceling her move! 
+* **If $K$ is even:** Bob gets the last move. Every single thing Alice does will be erased. The array remains completely unchanged. The answer is just the maximum subarray sum of the original array $a$ (Standard Kadane's).
+* **If $K$ is odd:** Alice gets one unopposed "free" move. The game essentially reduces to: *Alice gets to permanently add $+b_i$ to exactly one index $i$ of her choice.*
+
+### 🪤 The Trap (What failed)
+**The Subarray Boundary Trap:** If Alice boosts index $i$, you might think the new max subarray is just Kadane's over the whole array. But simulating Kadane's $N$ times (once for every possible boosted index $i$) takes $O(N^2)$ and will Time Limit Exceed (TLE). 
+You must calculate the maximum subarray in $O(1)$ time for each $i$. To do this, you need the best subarray that **ends** exactly at $i-1$, and the best subarray that **starts** exactly at $i+1$. Standard prefix sums won't work here; you need "Kadane-style" prefix/suffix arrays!
+
+### 🛠️ The Strategy
+1. **Even $K$:** Run standard Kadane's algorithm on array $a$ to find the global maximum subarray sum. Return it.
+2. **Odd $K$ (The Precomputation):**
+   * Build a `pref` array where `pref[i]` is the max subarray sum strictly **ending** at index $i$.
+   * Build a `suff` array where `suff[i]` is the max subarray sum strictly **starting** at index $i$.
+3. **Odd $K$ (The Sweep):** Iterate through every index $i$ from $0$ to $n-1$, assuming Alice gives her $+b_i$ boost here.
+4. The maximum possible subarray score if Alice boosts index $i$ is:
+   `score = a[i] + b[i]`
+   `if (i > 0 && pref[i-1] > 0) score += pref[i-1]`
+   `if (i < n-1 && suff[i+1] > 0) score += suff[i+1]`
+5. Track the maximum `score` across all possible choices of $i$ and return it.
+
+### ⏱️ Complexity
+* **Time:** $O(N)$ (Building the `pref` and `suff` arrays takes a single linear pass. Checking all possible boosted indices $i$ takes another linear pass).
+* **Space:** $O(N)$ (To store the `pref` and `suff` state arrays).
+
+</details>
+
 ## 🧮 Two Pointers 
 
 <details>
