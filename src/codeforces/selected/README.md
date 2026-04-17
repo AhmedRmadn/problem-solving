@@ -167,6 +167,7 @@ Here is the trick: because a new soldier spawns *every single day*, waiting $2d-
 * **Space:** $O(1)$ (Only storing a few primitive variables)
 
 </details>
+
 ## 🧮 Two Pointers 
 
 <details>
