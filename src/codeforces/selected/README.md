@@ -111,7 +111,7 @@ while (x > 0 && k <= 1000000000000L) {
 <summary><b>D1. Tree Coloring (Easy Version)</b> | <code>Hello 2026</code> | <code>Tree BFS & Greedy Bounds</code></summary>
 
 > **Link:** [Codeforces Problem](https://codeforces.com/problemset/problem/2183/D1)
-> **Source Code:** [TreeColoringEasyVersion.java]([src/codeforces/selected/TreeColoringEasyVersion.java](https://github.com/AhmedRmadn/problem-solving/blob/master/src/codeforces/selected/TreeColoringEasyVersion.java))
+> **Source Code:** [TreeColoringEasyVersion.java](https://github.com/AhmedRmadn/problem-solving/blob/master/src/codeforces/selected/TreeColoringEasyVersion.java)
 > **Tags:** `constructive algorithms`, `dfs and similar`, `greedy`, `trees`
 
 ### 💡 The "Aha!" Moment
@@ -134,6 +134,36 @@ A common mistake when calculating the "parent + children" bottleneck is just tak
 ### ⏱️ Complexity
 * **Time:** $O(V + E)$ (A standard BFS completely traversing the tree)
 * **Space:** $O(V)$ (Storing the adjacency list, the `visited` array, and the BFS `Queue`)
+
+</details>
+
+<details>
+<summary><b>D. Rae Taylor and Trees (Easy)</b> | <code>Codeforces</code> | <code>Math & Graph Connectivity</code></summary>
+
+> **Link:** [Codeforces Problem](https://codeforces.com/problemset/problem/2171/D)
+> **Source Code:** [RaeTaylorTreesEasyVersion.java](https://github.com/AhmedRmadn/problem-solving/blob/master/src/codeforces/selected/RaeTaylorTreesEasyVersion.java)
+> **Tags:** `binary search` , `data structures` , `dp` , `dsu` , `greedy` , `implementation` , `trees`
+
+### 💡 The "Aha!" Moment
+To build a valid tree, the graph must be completely connected. The problem states that an edge can only exist between a left node $u$ and a right node $v$ if the left node's value is strictly smaller ($u < v$). 
+
+What would make the tree impossible? If we can draw a vertical line anywhere in the array where **every number on the left is greater than every number on the right**. If this happens, no valid edges can ever cross that line from left to right, and the graph splits into two permanently disconnected components!
+
+### 🪤 The Trap (What failed)
+Because the problem mentions "graphs" and "trees", the immediate trap is trying to simulate building the tree using a Disjoint Set Union (DSU), DFS, or Segment Trees. This will overcomplicate the easy version. You don't need to build the tree; you only need to prove that the array doesn't have a "heavy left, light right" disconnect.
+
+### 🛠️ The Strategy
+How do we mathematically check for a disconnect without simulating the graph? 
+1. Look at any suffix of the array of length `count`. 
+2. If that suffix contains exactly the numbers $1, 2, \dots, \text{count}$, then its maximum value (`largest`) will be exactly equal to `count`.
+3. If the right side contains $1$ through $k$, the left side *must* contain $k+1$ through $n$. This is the exact "heavy left, light right" scenario that breaks the graph!
+4. Therefore, we just scan from right to left. We track the `largest` number seen in our suffix of length `count`. 
+   * If `largest == count`, an isolated light group exists. Output `NO`.
+   * If `largest > count`, the suffix contains a "heavy" number, meaning its "light" counterpart must be on the left side. This guarantees an edge can cross the boundary to connect them!
+
+### ⏱️ Complexity
+* **Time:** $O(N)$ (A single right-to-left pass tracking the maximum)
+* **Space:** $O(N)$ (To store the array)
 
 </details>
 
