@@ -432,3 +432,40 @@ Because all robots move together, we can calculate exactly how far a robot needs
 * **Space:** $O(N + M)$ (To store the distances, arrays, and queues).
 
 </details>
+
+<details>
+<summary><b>C. Monopati</b> | <code>Codeforces Round 1063 (Div. 2)</code> | </summary>
+
+> **Link:** [Codeforces Problem](https://codeforces.com/problemset/problem/2163/C)
+> **Source Code:** [TheRoboticRush.java](https://github.com/AhmedRmadn/problem-solving/blob/master/src/codeforces/selected/Monopati.java)
+> **Tags:** `brute force` , `combinatorics` , `dp` , `math` , `two pointers`
+
+### 💡 The "Aha!" Moment
+Instead of checking every possible $(l, r)$ pair to see if a path exists, we can reverse the logic: **look at the paths to see what pairs they allow!**
+
+Because the grid is only 2 rows deep, any valid "down-right" path is entirely defined by a single choice: **the column $i$ where we drop from row 1 to row 2**. 
+For a specific drop column $i$, the path uses cells `(1, 1)` to `(1, i)`, and then `(2, i)` to `(2, n)`. 
+To make this exact path valid, our lower bound $l$ must be $\le$ the smallest number on the path, and our upper bound $r$ must be $\ge$ the largest number on the path. 
+So, if we precalculate the Min and Max for every possible drop column $i$ (let's call them $L_i$ and $R_i$), any pair $(l, r)$ that completely encapsulates $[L_i, R_i]$ will successfully open path $i$!
+
+### 🪤 The Trap (What failed)
+1. **The $O(N^2)$ Brute Force:** Looping through all possible $(l, r)$ pairs and running a grid traversal will instantly result in a Time Limit Exceeded (TLE) since $N = 2 \cdot 10^5$.
+2. **The "Strict $L$" Trap:** If a path requires bounds $[5, 10]$, then choosing $l=5$ and $r=10$ works. But choosing $l=4$ and $r=10$ **also** works! You cannot just map $L_i \to R_i$ and count them independently. If a path is unlocked by $L=5$, it is automatically unlocked for all $l \le 5$. You must propagate your minimum $R$ values backward using a sweep line.
+
+### 🛠️ The Strategy
+1. **Prefix & Suffix Arrays:** * Calculate `prefixMin` and `prefixMax` for Row 1.
+   * Calculate `suffixMin` and `suffixMax` for Row 2.
+2. **Find Path Constraints:** For every drop column $i$, calculate its strict requirements:
+   * $L_i = \min(\text{prefixMin}[i], \text{suffixMin}[i])$
+   * $R_i = \max(\text{prefixMax}[i], \text{suffixMax}[i])$
+3. **Map the Best $R$:** Create an array `bestR` where `bestR[l]` stores the smallest (easiest to satisfy) $R$ requirement among all paths that have a lower bound requirement exactly equal to $l$.
+4. **The Backwards Sweep:** Loop backwards from $2N$ down to $1$. 
+   `bestR[l] = Math.min(bestR[l], bestR[l + 1])`
+   *(This ensures that if $l=5$ has no paths, but $l=6$ unlocks a path requiring $R=10$, then $l=5$ can also use that path!).*
+5. **Count Valid Pairs:** If `bestR[l]` is not infinity, any $r$ from `bestR[l]` up to $2N$ is a valid upper bound. Add `(2N - bestR[l] + 1)` to the total.
+
+### ⏱️ Complexity
+* **Time:** $O(N)$ (A few linear passes to build the prefix/suffix arrays and sweep the `bestR` array).
+* **Space:** $O(N)$ (For the prefix, suffix, and `bestR` arrays).
+
+</details>
