@@ -75,10 +75,42 @@ To win, a player must secure a `1` at the Most Significant Bit (MSB) where $A$ a
 </details>
 
 <details>
-<summary><b>1. Removal of a Sequence (Hard Version)</b> | <code>Div 2 D</code> | <code>10^12 Math Simulation</code></summary>
+<summary><b>D1. Removal of a Sequence (Easy Version)</b> | <code>Educational Codeforces Round 184 (Rated for Div. 2)</code> | </summary>
 
-> **Link:** [Insert Codeforces Link]
-> **Tags:** `math`, `implementation`, `harmonic lemma`
+> **Link:** [Codeforces Problem](https://codeforces.com/problemset/problem/2169/D1)
+> **Source Code:** [RemovalSequenceEasyVersion.java](https://github.com/AhmedRmadn/problem-solving/blob/master/src/codeforces/selected/RemovalSequenceEasyVersion.java)
+> **Tags:** `binary search` , `implementation` , `math` , `number theory`
+
+### 💡 The "Aha!" Moment
+Instead of simulating the massive array shrinking forward, simulate your target index $K$ growing **backward** through time! 
+Before an operation, the numbers are grouped in blocks of $Y$. The operation deletes the last element of every block, meaning each block shrinks to size $Y - 1$. 
+If we know our target ends up at index $K$ *after* a deletion, we can figure out its index *before* the deletion by calculating how many deleted elements preceded it. Since every $Y - 1$ surviving elements represent $1$ deleted element, the number of deleted elements before our target is exactly $\lfloor (K - 1) / (Y - 1) \rfloor$. 
+We just add those missing elements back to $K$ to find its previous position!
+
+### 🪤 The Trap (What failed)
+1. **Division by Zero:** If $Y = 1$, every single element in the array is deleted on the very first operation. The formula $(K - 1) / (Y - 1)$ will throw an arithmetic exception. You must manually check for $Y = 1$ and instantly output `-1`.
+2. **The Upper Limit Ghost:** The original sequence strictly stops at $10^{12}$. If your backward-tracking $K$ ever exceeds $10^{12}$, it means the number that *would* end up at your target position didn't actually exist in the initial array. You must break out of the loop early to avoid Time Limit Exceeded (TLE) and output `-1`.
+
+### 🛠️ The Strategy
+1. **Edge Case:** If $y == 1$, print `-1` and `continue` to the next testcase.
+2. **Reverse Simulation:** Loop $X$ times. In each step, update the index to its previous state: 
+   `k = k + ((k - 1) / (y - 1))`
+3. **Early Exit:** Add a condition to the `while` loop to immediately stop if $k > 10^{12}$. (Since $X$ is up to $10^5$, checking this prevents wasteful looping).
+4. **Final Check:** After the loop, if $k \le 10^{12}$, print $k$ (since the initial array was just $1, 2, 3 \dots$, the value at index $k$ is exactly $k$). Otherwise, print `-1`.
+
+### ⏱️ Complexity
+* **Time:** $O(X)$ (A simple `while` loop running at most $X$ times. Because $X \le 10^5$ in the Easy version, this easily passes within the time limit).
+* **Space:** $O(1)$ (Only storing a few primitive variables).
+
+</details>
+
+
+<details>
+<summary><b>D2. Removal of a Sequence (Hard Version)</b> | <code>Educational Codeforces Round 184 (Rated for Div. 2)</code> | <code>10^12 Math Simulation</code></summary>
+
+> **Link:** [Codeforces Problem](https://codeforces.com/contest/2169/problem/D2)
+> **Source Code:** [RemovalSequenceEasyVersion.java](https://github.com/AhmedRmadn/problem-solving/blob/master/src/codeforces/selected/RemovalSequenceHardVersion.java)
+> **Tags:** `binary search` , `implementation` , `math` , `number theory`
 
 ### 💡 The "Aha!" Moment
 Don't simulate the array shrinking forward. Track the final index backward through time! Because $X = 10^{12}$, calculate exactly how many operations it takes for your division "speed" to increase, and teleport forward in $O(\sqrt{X})$ time.
