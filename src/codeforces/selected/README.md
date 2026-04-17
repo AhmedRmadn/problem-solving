@@ -11,6 +11,38 @@ A personal database of competitive programming "Aha!" moments, core tricks, and 
 ## 🧮 Math & Number Theory
 
 <details>
+<summary><b>C. Kanade's Perfect Multiples</b> | <code>Codeforces Round 1068 (Div. 2)</code> | <code>Number Theory & Greedy</code></summary>
+
+> **Link:** [Codeforces Problem](https://codeforces.com/problemset/problem/2173/C)
+> **Source Code:** [KanadePerfectMultiples.java](https://github.com/AhmedRmadn/problem-solving/blob/master/src/codeforces/selected/KanadePerfectMultiples.java)
+> **Tags:** `brute force`, `constructive algorithms`, `greedy`, `number theory`
+
+### 💡 The "Aha!" Moment
+How do we confidently build the set $B$? Start from the absolute smallest unvisited number $x$ in array $A$. 
+Rule 1 states $x$ must have a divisor in $B$. Could we pick a divisor $d < x$ and put it in $B$? **No.** Rule 2 states that if $d$ is in $B$, all its multiples (including $d$ itself) must be in $A$. Because we process elements in ascending order, if a valid $d$ existed in $A$, we would have processed it earlier, and it would have already "covered" $x$ as one of its multiples! 
+Since $x$ is still unvisited, no such divisor exists. Therefore, our hand is forced: **we mathematically must add $x$ itself to $B$.**
+
+### 🪤 The Trap (What failed)
+1. **The $10^9$ Memory Trap:** $k$ can be up to $10^9$. If you try to use a boolean array of size $k$ to track visited states, you will get an instant Memory Limit Exceeded (MLE). You *must* use a `HashMap` or `HashSet` which bounds the space to $O(N)$.
+2. **The $10^9$ Time Limit Trap:** If $x=1$ and $k=10^9$, checking all multiples up to $k$ requires $10^9$ iterations. You **must** immediately `break` the loop the second a multiple is not found in the map. Because there are only $N$ elements in the array, the `break` ensures the inner loop rarely executes, keeping the time complexity strictly bound by $O(N \log N)$.
+
+### 🛠️ The Strategy
+1. Load all elements of $A$ into a Min-Heap (`PriorityQueue`) so we can process them from smallest to largest.
+2. Store all elements in a `HashMap<Long, Boolean>` to allow $O(1)$ lookups and track whether an element has been "covered" (visited).
+3. Pop the smallest element $x$. If it is already marked `true` (covered by a previous element's multiples), skip it.
+4. If $x$ is unvisited, add $x$ to our answer set $B$.
+5. Iterate through all multiples of $x$ ($x, 2x, 3x \dots$) up to $k$:
+   * If a multiple is **missing** from the map, it violates Rule 2. The configuration is impossible. Set a flag to `false` and break completely.
+   * If the multiple **exists**, mark it as `true` (covered) in the map.
+6. If the flag is false, output `-1`. Otherwise, print the size of $B$ followed by its elements.
+
+### ⏱️ Complexity
+* **Time:** $O(N \log N)$ (Sorting via the Priority Queue takes $N \log N$. Because of the early `break` condition, the harmonic series of checking multiples is bounded by the $N$ elements actually present in the map).
+* **Space:** $O(N)$ (To store the elements in the HashMap, HashSet, and Priority Queue).
+
+</details>
+
+<details>
 <summary><b>1. Removal of a Sequence (Hard Version)</b> | <code>Div 2 D</code> | <code>10^12 Math Simulation</code></summary>
 
 > **Link:** [Insert Codeforces Link]
@@ -79,7 +111,7 @@ while (x > 0 && k <= 1000000000000L) {
 <summary><b>D1. Tree Coloring (Easy Version)</b> | <code>Hello 2026</code> | <code>Tree BFS & Greedy Bounds</code></summary>
 
 > **Link:** [Codeforces Problem](https://codeforces.com/problemset/problem/2183/D1)
-> **Source Code:** [TreeColoringEasyVersion.java](src/codeforces/selected/TreeColoringEasyVersion.java)
+> **Source Code:** [TreeColoringEasyVersion.java]([src/codeforces/selected/TreeColoringEasyVersion.java](https://github.com/AhmedRmadn/problem-solving/blob/master/src/codeforces/selected/TreeColoringEasyVersion.java))
 > **Tags:** `constructive algorithms`, `dfs and similar`, `greedy`, `trees`
 
 ### 💡 The "Aha!" Moment
