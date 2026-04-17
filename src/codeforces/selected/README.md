@@ -135,6 +135,38 @@ You can't just delete *any* `)` in a `)(` pair. If you delete a `)`, you break t
 
 </details>
 
+<details>
+<summary><b>C. War Strategy</b> | <code>Hello 2026</code> | <code>Math & Greedy</code></summary>
+
+> **Link:** [Codeforces Problem](https://codeforces.com/problemset/problem/2183/C)
+> **Source Code:** [WarStrategy.java]([src/codeforces/selected/WarStrategy.java](https://github.com/AhmedRmadn/problem-solving/blob/master/src/codeforces/selected/WarStrategy.java))
+> **Tags:** `binary search`, `greedy`, `math`, `two pointers`
+
+### 💡 The "Aha!" Moment
+To maximize our fortified bases, we should pick one "primary" side to expand as far as possible, say distance $d$. 
+To reach distance $d$, we need $d$ soldiers. Since we start with 1, we must wait $d-1$ days for the rest to spawn, plus $d$ days to physically move the pipeline outward. Total cost: **$2d - 1$ days**.
+
+Here is the trick: because a new soldier spawns *every single day*, waiting $2d-1$ days creates a massive surplus of soldiers piled up at home base $k$. To fortify the *other* side, we no longer need to wait for spawns! We just take that giant stack at $k$ and slide it over step-by-step. Sliding a stack to cover distance $x$ takes exactly $x$ days.
+
+### 🪤 The Trap (What failed)
+1. **Miscalculating the secondary side:** Assuming the second side also takes $2x - 1$ days to fortify. It only takes $x$ days because the soldiers are already pre-spawned and waiting at $k$!
+2. **Missing the $d$ upper bound:** The secondary side expansion can never exceed $d$. Why? Because if we expanded further on the secondary side, *that* side would actually be our primary side. You must cap the secondary distance using `Math.min(..., d)`.
+
+### 🛠️ The Strategy
+1. Loop through every base `curr` from $1$ to $n$, treating the distance from $k$ to `curr` as our "primary" expansion distance $d = |k - curr|$.
+2. Calculate `numDays = 2 * d - 1`. If `numDays > m`, we don't have enough time to reach this base. Skip it.
+3. Calculate the available space on the opposite side: `otherSide = (curr > k) ? k - 1 : n - k`.
+4. Calculate how far we can push our surplus stack into the `otherSide`. This is limited by three strict bounds:
+   * The days we have left: `m - numDays`
+   * The physical edge of the map: `otherSide`
+   * The symmetry rule (can't exceed primary): `d`
+5. The total fortified bases for this iteration is `d` (primary) + `1` (home base) + `dFromOtherSide`. Keep a running maximum.
+
+### ⏱️ Complexity
+* **Time:** $O(N)$ (A single loop checking each base as the primary target)
+* **Space:** $O(1)$ (Only storing a few primitive variables)
+
+</details>
 ## 🧮 Two Pointers 
 
 <details>
