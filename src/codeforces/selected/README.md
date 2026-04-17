@@ -167,6 +167,39 @@ How do we mathematically check for a disconnect without simulating the graph?
 
 </details>
 
+<details>
+<summary><b>F. Rae Taylor and Trees (Hard)</b> | <code>Codeforces Round 1065 (Div. 3)s</code> | <code>Constructive Algorithms & Greedy</code></summary>
+
+> **Link:** [Codeforces Problem](https://codeforces.com/contest/2171/problem/F)
+> **Source Code:** [RaeTaylorTreesEasyVersion.java](https://github.com/AhmedRmadn/problem-solving/blob/master/src/codeforces/selected/RaeTaylorTreesHardVersion.java)
+> **Tags:** `binary search` , `data structures` , `dp` , `dsu` , `greedy` , `implementation` , `trees`
+
+### 💡 The "Aha!" Moment
+The rule states: if we connect $u$ and $v$ (where $u < v$), $u$ **must** appear before $v$ in the permutation $p$. 
+
+Because we process the array $p$ from left to right, any node $v$ we haven't processed yet is guaranteed to appear *after* our current node $u$. This means we can greedily connect $u$ to **every** unparented node $v$ that is strictly greater than $u$ ($v > u$). This forms a massive "star graph" radiating out from $u$, giving us the maximum possible forward "reach" into the right side of the array!
+
+### 🪤 The Trap (What failed)
+1. **The Disconnect Trap:** Just like the Easy version, you might encounter a node $u$ that hasn't been connected to anything yet. If the furthest index you've reached with your forward-reaching star edges is *before* your current index, the graph is permanently severed. You must output `NO`.
+2. **The Bridging Trap:** If you find an unparented node $u$, but your forward reach extends *past* it, how do you pull $u$ into the tree? You can't connect it to a previous node because the rules might forbid it. The safest, guaranteed legal move is to connect $u$ to the node at your `lastReached` index. Since $u$ appears before `lastReached` in $p$, and $u$ failed to connect earlier (implying $u < p[\text{lastReached}]$), this edge is mathematically guaranteed to be valid!
+
+### 🛠️ The Strategy
+1. Track the locations of all elements using an `idx` array (where `idx[value] = position`).
+2. Initialize a `parent` array with `-1` to track connections, and a `lastReached = -1` variable to track the furthest forward index we have successfully attached to our tree.
+3. Iterate through $p$ from left to right. Let the current node be $u$ at index $i$.
+4. **The Bridging Step:** If $u$ has no parent:
+   * If `lastReached < i`, the graph is broken. Halt and output `NO`.
+   * Otherwise, bridge the gap by setting `parent[u] = p[lastReached]`.
+5. **The Star-Graph Step:** Now that $u$ is securely in the tree, connect it to as many future nodes as possible. Iterate through all values $v > u$. If $v$ has no parent, set `parent[v] = u` and update `lastReached = max(lastReached, idx[v])`. 
+   *(Note: because we process sequentially, we can break this loop the second we hit a $v$ that already has a parent, keeping the time complexity strictly linear).*
+6. If the loop completes successfully, output `YES` and print the edges from the `parent` array.
+
+### ⏱️ Complexity
+* **Time:** $O(N)$ (Although there is a nested loop, each node $v$ is assigned a parent exactly once and then skipped. The inner loop runs exactly $N$ times overall).
+* **Space:** $O(N)$ (To store the `parent` and `idx` arrays).
+
+</details>
+
 
 ## 🧮 Greedy 
 
