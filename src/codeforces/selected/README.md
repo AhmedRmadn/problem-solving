@@ -138,7 +138,7 @@ A common mistake when calculating the "parent + children" bottleneck is just tak
 </details>
 
 <details>
-<summary><b>D. Rae Taylor and Trees (Easy)</b> | <code>Codeforces</code> | <code>Math & Graph Connectivity</code></summary>
+<summary><b>D. Rae Taylor and Trees (Easy)</b> | <code>Codeforces Round 1065 (Div. 3)</code> | <code>Math & Graph Connectivity</code></summary>
 
 > **Link:** [Codeforces Problem](https://codeforces.com/problemset/problem/2171/D)
 > **Source Code:** [RaeTaylorTreesEasyVersion.java](https://github.com/AhmedRmadn/problem-solving/blob/master/src/codeforces/selected/RaeTaylorTreesEasyVersion.java)
@@ -266,6 +266,7 @@ The interleaved turns act like the Euclidean Algorithm for GCD. The sum of the m
 * **Space:** $O(N + M)$ to store the elements in the two Priority Queues.
 
 </details>
+
 ## 🧮 Two Pointers 
 
 <details>
