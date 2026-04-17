@@ -146,6 +146,42 @@ while (x > 0 && k <= 1000000000000L) {
 ```
 </details>
 
+<details>
+<summary><b>C. Meximum Array 2</b> | <code>Codeforces Round 1066 (Div. 1 + Div. 2)</code> |</summary>
+
+> **Link:** [Codeforces Problem](https://codeforces.com/problemset/problem/2157/C)
+> **Source Code:** [MeximumArray2.java](https://github.com/AhmedRmadn/problem-solving/blob/master/src/codeforces/selected/MeximumArray2.java)
+> **Tags:** `constructive algorithms` , `greedy` , `implementation` , `math`
+
+### 💡 The "Aha!" Moment
+Every index $i$ in the array falls into exactly one of four constraint states. By resolving these states greedily, we can construct the array in a single pass:
+1. **None:** Covered by no queries. It doesn't matter, set to `0`.
+2. **MIN Only:** The minimum in this range must be $k$. To safely satisfy this without accidentally violating future queries, set it to exactly $k$.
+3. **MIN + MEX Overlap:** The MIN query demands $x \ge k$. The MEX query demands $x \ne k$. The smallest number that satisfies both is $k + 1$. 
+4. **MEX Only:** The MEX query demands $x \ne k$, and requires the subarray to contain every number from $0$ to $k-1$. Instead of carefully placing these numbers per query, we can use a global cyclic pattern! Assigning `i % k` ensures that *any* contiguous block of size $k$ will perfectly contain $0, 1, \dots, k-1$ in some shifted order. Since the problem guarantees a valid array exists, the MEX-only zones are guaranteed to be large enough to hold these cycles.
+
+### 🪤 The Trap (What failed)
+1. **The $O(N \cdot Q)$ Brute Force:** If you loop through $l$ to $r$ for every query to mark the constraints, you will get a Time Limit Exceeded (TLE). You must use a **Difference Array** to mark the boundaries in $O(1)$ time.
+2. **The Difference Array Overwrite:** When processing multiple queries, you cannot use `=` to mark the boundaries (e.g., `min[l] = 1; min[r] = -1;`). If queries overlap, you will overwrite and destroy the previous boundary markers! You **must** use `+= 1` and `+= -1`.
+
+### 🛠️ The Strategy
+1. Initialize two difference arrays: `min[]` and `mex[]`, both of size $N+1$.
+2. For each query $(c, l, r)$:
+   * If $c == 1$ (MIN query): `min[l] += 1` and `min[r] += -1`.
+   * If $c == 2$ (MEX query): `mex[l] += 1` and `mex[r] += -1`.
+3. Sweep through the array from $0$ to $N-1$, keeping a running sum `count1` for MIN constraints and `count2` for MEX constraints.
+4. Apply the 4-state greedy logic at each index based on the current values of `count1` and `count2`:
+   * `count1 > 0` && `count2 > 0` $\implies k + 1$
+   * `count1 > 0` $\implies k$
+   * `count2 > 0` $\implies i \pmod k$
+   * Else $\implies 0$
+
+### ⏱️ Complexity
+* **Time:** $O(N + Q)$ (One $O(Q)$ loop to process the queries via difference arrays, and one $O(N)$ sweep to construct the array).
+* **Space:** $O(N)$ (To store the `min` and `mex` difference arrays).
+
+</details>
+
 ## 🧮 Graph & Trees
 
 <details>
