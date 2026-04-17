@@ -139,7 +139,7 @@ You can't just delete *any* `)` in a `)(` pair. If you delete a `)`, you break t
 <summary><b>C. War Strategy</b> | <code>Hello 2026</code> | <code>Math & Greedy</code></summary>
 
 > **Link:** [Codeforces Problem](https://codeforces.com/problemset/problem/2183/C)
-> **Source Code:** [WarStrategy.java]([src/codeforces/selected/WarStrategy.java](https://github.com/AhmedRmadn/problem-solving/blob/master/src/codeforces/selected/WarStrategy.java))
+> **Source Code:** [WarStrategy.java](https://github.com/AhmedRmadn/problem-solving/blob/master/src/codeforces/selected/WarStrategy.java)
 > **Tags:** `binary search`, `greedy`, `math`, `two pointers`
 
 ### 💡 The "Aha!" Moment
@@ -168,6 +168,42 @@ Here is the trick: because a new soldier spawns *every single day*, waiting $2d-
 
 </details>
 
+<details>
+<summary><b>B. Battle of Arrays</b> | <code>2025-2026 ICPC NERC</code> | <code>Game Theory & Priority Queues</code></summary>
+
+> **Link:** [Codeforces Problem](https://codeforces.com/problemset/problem/2181/B)
+> **Source Code:** [BattleOfArrays.java](https://github.com/AhmedRmadn/problem-solving/blob/master/src/codeforces/selected/BattleArrays.java)
+> **Tags:** `data structures`, `games`, `greedy`
+
+### 💡 The "Aha!" Moment & Game Analysis
+The problem dictates that you **must** attack the opponent's maximum element. However, you can choose *any* element from your own array to attack with. 
+
+**Why is choosing your max element optimal?** When you attack, your chosen element $x$ is **not consumed or weakened**. You are essentially just firing a laser of size $x$ at the opponent's element $y$. Because your goal is to destroy the opponent's array before they destroy yours, you want to deal the maximum possible damage every single turn. Dealing less damage gives the opponent a larger element to hit you back with on their next turn. Therefore, the greedy choice—always attacking with your max element—is strictly mathematically optimal.
+
+### 🪤 The Trap (What failed)
+**The "Simulation TLE" Illusion:** At first glance, a step-by-step simulation looks like it will fail. What if Alice's max is $1$, and Bob's max is $10^9$? Won't Alice take $10^9$ turns to reduce Bob's element, causing a TLE?
+**No!** Because it is a *turn-based* game. 
+1. Alice uses $1$ to hit Bob's $10^9$. Bob's element becomes $999,999,999$.
+2. Now it is **Bob's turn**. Bob uses his $999,999,999$ to hit Alice's $1$. 
+3. Since $999,999,999 \ge 1$, Alice's element is instantly destroyed!
+The interleaved turns act like the Euclidean Algorithm for GCD. The sum of the maximums drops drastically, or an element is instantly vaporized. The simulation will never drag on.
+
+### 🛠️ The Strategy
+1. Load all of Alice's elements into a Max-Heap (Priority Queue).
+2. Load all of Bob's elements into a Max-Heap.
+3. **Simulate Alice's Turn:** * Peek at Alice's max ($x$). Poll Bob's max ($y$).
+   * If $x < y$, Bob's element survives and is reduced to $y - x$. Push it back into Bob's heap. (If $x \ge y$, it is destroyed and not added back).
+4. **Simulate Bob's Turn:**
+   * If Bob's heap is empty, stop (Alice won).
+   * Peek at Bob's max ($x$). Poll Alice's max ($y$).
+   * If $x < y$, Alice's element survives and is reduced to $y - x$. Push it back into Alice's heap.
+5. Repeat until one heap is empty. The winner is the one with a non-empty heap.
+
+### ⏱️ Complexity
+* **Time:** $O((N + M) \log(\text{MAX}) \log(N+M))$. Because of the Euclidean-like reduction on each alternating turn, elements are destroyed very quickly. Each priority queue operation takes logarithmic time.
+* **Space:** $O(N + M)$ to store the elements in the two Priority Queues.
+
+</details>
 ## 🧮 Two Pointers 
 
 <details>
