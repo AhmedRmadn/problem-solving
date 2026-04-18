@@ -8,40 +8,46 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.StringTokenizer;
 
-
-public class WarStrategy {
-	
+///https://codeforces.com/problemset/problem/2152/C
+public class TripleRemoval {
 	public static void main(String[] args) {
 		InputReader in = new InputReader(System.in);
 		OutputWriter out = new OutputWriter(System.out);
 		int t = in.nextInt();
-		while(t-- > 0) {
-			long n = in.nextLong();
-			long m = in.nextLong();
-			long k = in.nextLong();
-			long max = 0;
-			for(int curr = 1 ; curr <= n ; curr++) {
-				/////
-				long d = Math.abs(k - curr);
-				long otherSide = n - k;
-				if(curr > k) { //// incase we are in the other side of k
-					otherSide = k - 1;
-				}
-				long numDays = 2 * d -1;
-				if(numDays > m)
-					continue;
-				long remDays = m - numDays;
-				long dFromOtherSide =Math.min(Math.min(remDays,otherSide),d);
-//				System.out.println(d+" "+otherSide+" "+numDays+" "+remDays+" "+dFromOtherSide);
-				max = Math.max(max, dFromOtherSide +d + 1);
-				
+		while (t-- > 0) {
+			int n = in.nextInt();
+			int q = in.nextInt();
+			int[] a = new int[n];
+			for (int i = 0; i < n; i++)
+				a[i] = in.nextInt();
+			int[] suffixAdjacent = new int[n + 1];
+			int[] countOnes = new int[n + 1];
+			countOnes[n - 1] = a[n - 1];
+			for (int i = n - 2; i >= 0; i--) {
+				suffixAdjacent[i] = suffixAdjacent[i + 1] + (a[i] == a[i + 1] ? 1 : 0);
+				countOnes[i] = countOnes[i + 1] + a[i];
 			}
-			out.println(max);
+			while (q-- > 0) {
+				int l = in.nextInt() - 1;
+				int r = in.nextInt() - 1;
+				int ones = countOnes[l] - countOnes[r + 1];
+				int adjacent = suffixAdjacent[l] - suffixAdjacent[r];
+				int len = r - l + 1;
+				int zeros = len - ones;
+				//System.out.println(ones+" "+zeros+" "+adjacent+" "+len);
+				if (ones % 3 != 0 || zeros % 3 != 0) {
+					out.println(-1);
+				} else if (adjacent > 0) {
+					out.println(len / 3);
+				} else {
+					out.println(2 + (len - 3) / 3);
+				}
 
+			}
 		}
 		out.writer.flush();
 	}
-	
+
 	static class InputReader {
 		public BufferedReader reader;
 		public StringTokenizer tokenizer;
